@@ -1,0 +1,21 @@
+## Build folders
+Binaries
+Intermediate
+
+## IDE folders
+.vs
+.vscode
+.idea
+
+## Solutions/Makefile/Cmake Gen
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.sln.DotSettings.user
+**Makefile
+*.cmake
+*.make
+
+## ImGui
+Solar/imgui.ini
