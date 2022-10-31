@@ -1,0 +1,15 @@
+[submodule "Vendor/glfw"]
+	path = Vendor/glfw
+	url = git@github.com:Tiwann/glfw.git
+[submodule "Vendor/fmt"]
+	path = Vendor/fmt
+	url = git@github.com:Tiwann/fmt.git
+[submodule "Vendor/imgui"]
+	path = Vendor/imgui
+	url = git@github.com:Tiwann/imgui.git
+[submodule "Solar/External/glm"]
+	path = Solar/External/glm
+	url = git@github.com:Tiwann/glm.git
+[submodule "Vendor/spdlog"]
+	path = Vendor/spdlog
+	url = git@github.com:Tiwann/spdlog.git
