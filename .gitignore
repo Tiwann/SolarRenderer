@@ -13,7 +13,7 @@ Intermediate
 *.vcxproj.user
 *.vcxproj.filters
 *.sln.DotSettings.user
-**Makefile
+*Makefile
 *.cmake
 *.make
 
