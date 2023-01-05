@@ -16,13 +16,11 @@ workspace "SolarRenderer"
 	
 
 	newoption {
-		trigger = "subsystem",
-		value = "SUBSYSTEM",
+		trigger = "console",
 		description = "Use default console subsystem or WindowedApp",
-		allowed = {
-		   { "windows", "Windowed application (Windows)" },
-		   { "apple", "Windowed application (MacOS)" },
-		   { "console",  "Default console application" }
-		},
-		default = "console"
-	 }
+	}
+	
+	newoption {
+    		trigger = "windowed",
+    		description = "Use default console subsystem or WindowedApp",
+    }

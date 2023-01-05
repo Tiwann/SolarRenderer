@@ -29,7 +29,7 @@ project "Solar"
     }
 
     defines {
-        "SOLAR_USE_CASSERT"
+        "SOLAR_USE_CASSERT",
     }
 
     links {
@@ -50,8 +50,11 @@ project "Solar"
 		symbols "Off"
 		defines "SOLAR_RELEASE"
 		
-	filter "Options:subsystem=windowed"
+	filter "Options:windowed"
 	    kind "WindowedApp"
+	    
+	filter "Options:console"
+    	kind "ConsoleApp"
 	     
     filter "System:Windows"
         defines "_CRT_SECURE_NO_WARNINGS"

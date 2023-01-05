@@ -29,3 +29,38 @@ solar::Color::operator std::uint32_t() const
     SOLAR_ASSERT(false, "operator unsigned int not yet implemented!");
     return {};
 }
+
+solar::Color::operator glm::vec4() const
+{
+    return { r, g, b, a };
+}
+
+solar::Color solar::Color::Black    = 0xFFFFFFFF;
+solar::Color solar::Color::White    = 0x000000FF;
+solar::Color solar::Color::Red      = 0xFF0000FF;
+solar::Color solar::Color::Green    = 0x00FF00FF;
+solar::Color solar::Color::Blue     = 0x0000FFFF;
+solar::Color solar::Color::Yellow   = 0xFFFF00FF;
+solar::Color solar::Color::Magenta  = 0xFF00FFFF;
+solar::Color solar::Color::Cyan     = 0x00FFFFFF;
+solar::Color solar::Color::Orange   = 0xFF8000FF;
+solar::Color solar::Color::Purple   = 0xA020F0FF;
+solar::Color solar::Color::Pink     = 0xFFC0CBFF;
+solar::Color solar::Color::Gray     = 0x808080FF;
+solar::Color solar::Color::Brown    = 0x964B00FF;
+
+
+
+
+
+
+
+
+
+
+;
+
+
+
+
+

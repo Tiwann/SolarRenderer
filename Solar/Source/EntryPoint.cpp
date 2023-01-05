@@ -10,94 +10,7 @@
 #include <spdlog/spdlog.h>
 #include <filesystem>
 
-#include "spdlog/sinks/stdout_color_sinks.h"
-
-static void ImGuiStyleDark()
-{
-  ImVec4* colors = ImGui::GetStyle().Colors;
-  colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-  colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-  colors[ImGuiCol_WindowBg]               = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
-  colors[ImGuiCol_ChildBg]                = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-  colors[ImGuiCol_PopupBg]                = ImVec4(0.19f, 0.19f, 0.19f, 0.92f);
-  colors[ImGuiCol_Border]                 = ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
-  colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.24f);
-  colors[ImGuiCol_FrameBg]                = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-  colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
-  colors[ImGuiCol_FrameBgActive]          = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-  colors[ImGuiCol_TitleBg]                = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-  colors[ImGuiCol_TitleBgActive]          = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
-  colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-  colors[ImGuiCol_MenuBarBg]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-  colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-  colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
-  colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.40f, 0.40f, 0.40f, 0.54f);
-  colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-  colors[ImGuiCol_CheckMark]              = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-  colors[ImGuiCol_SliderGrab]             = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
-  colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-  colors[ImGuiCol_Button]                 = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-  colors[ImGuiCol_ButtonHovered]          = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
-  colors[ImGuiCol_ButtonActive]           = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-  colors[ImGuiCol_Header]                 = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-  colors[ImGuiCol_HeaderHovered]          = ImVec4(0.00f, 0.00f, 0.00f, 0.36f);
-  colors[ImGuiCol_HeaderActive]           = ImVec4(0.20f, 0.22f, 0.23f, 0.33f);
-  colors[ImGuiCol_Separator]              = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-  colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
-  colors[ImGuiCol_SeparatorActive]        = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-  colors[ImGuiCol_ResizeGrip]             = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-  colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
-  colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-  colors[ImGuiCol_Tab]                    = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-  colors[ImGuiCol_TabHovered]             = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-  colors[ImGuiCol_TabActive]              = ImVec4(0.20f, 0.20f, 0.20f, 0.36f);
-  colors[ImGuiCol_TabUnfocused]           = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-  colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-  colors[ImGuiCol_DockingPreview]         = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-  colors[ImGuiCol_DockingEmptyBg]         = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-  colors[ImGuiCol_PlotLines]              = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-  colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-  colors[ImGuiCol_PlotHistogram]          = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-  colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-  colors[ImGuiCol_TableHeaderBg]          = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-  colors[ImGuiCol_TableBorderStrong]      = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-  colors[ImGuiCol_TableBorderLight]       = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-  colors[ImGuiCol_TableRowBg]             = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-  colors[ImGuiCol_TableRowBgAlt]          = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
-  colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-  colors[ImGuiCol_DragDropTarget]         = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-  colors[ImGuiCol_NavHighlight]           = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-  colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
-  colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
-  colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
-
-  ImGuiStyle& style = ImGui::GetStyle();
-  style.WindowPadding                     = ImVec2(8.00f, 8.00f);
-  style.FramePadding                      = ImVec2(5.00f, 2.00f);
-  style.CellPadding                       = ImVec2(6.00f, 6.00f);
-  style.ItemSpacing                       = ImVec2(6.00f, 6.00f);
-  style.ItemInnerSpacing                  = ImVec2(6.00f, 6.00f);
-  style.TouchExtraPadding                 = ImVec2(0.00f, 0.00f);
-  style.IndentSpacing                     = 25;
-  style.ScrollbarSize                     = 15;
-  style.GrabMinSize                       = 10;
-  style.WindowBorderSize                  = 1;
-  style.ChildBorderSize                   = 1;
-  style.PopupBorderSize                   = 1;
-  style.FrameBorderSize                   = 1;
-  style.TabBorderSize                     = 1;
-  style.WindowRounding                    = 7;
-  style.ChildRounding                     = 4;
-  style.FrameRounding                     = 3;
-  style.PopupRounding                     = 4;
-  style.ScrollbarRounding                 = 9;
-  style.GrabRounding                      = 3;
-  style.LogSliderDeadzone                 = 4;
-  style.TabRounding                       = 4;
-}
-
-#if defined(SOLAR_WINDOWS)
-INT CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+int SOLAR_MAIN
 {
     solar::Log::Init();
 
@@ -122,7 +35,6 @@ INT CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_FRAMEBUFFER_SRGB);
 
 #if defined(SOLAR_DEBUG)
     glEnable(GL_DEBUG_OUTPUT);
@@ -136,9 +48,9 @@ INT CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
     
     const std::vector<solar::Vertex> vertices
     {
-        {{-0.5, -0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},{1.0f, 0.0f, 0.0f, 1.0f}},
-        {{ 0.0f, 0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},{0.0f, 1.0f, 0.0f, 1.0f}},
-        {{ 0.5f,-0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+        {{-0.5, -0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Pink   },
+        {{ 0.0f, 0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Brown },
+        {{ 0.5f,-0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Cyan  },
     };
 
     const std::vector<std::uint32_t> indices { 0, 2, 1 };
@@ -156,16 +68,34 @@ INT CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
     shader.Compile();
     shader.Link();
 
-    {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        io.DisplaySize = { (float)window.Width(), (float)window.Height() };
-        ImGui_ImplGlfw_InitForOpenGL(*window, true);
-        ImGui_ImplOpenGL3_Init("#version 460 core");
-        ImGuiStyleDark();
-    }
+    //GLuint fbo;
+    //glCreateFramebuffers(1, &fbo);
+    //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    //// Create the texture
+    //GLuint texture;
+    //glGenTextures(1, &texture);
+    //glBindTexture(GL_TEXTURE_2D, texture);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    //// Attach the texture to the FBO
+    //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+
+    // Initialize the ImGui context
+    ImGui::CreateContext();
+    // Set up the ImGui style
+    ImGui::StyleColorsDark();
+    // Initialize the ImGui IO structure
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    // Set up the ImGui platform and renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(*window, true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
     
     while(!window.ShouldClose())
     {
@@ -177,114 +107,72 @@ INT CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
         glDrawElements(GL_TRIANGLES, (GLsizei)ibo.Count(), GL_UNSIGNED_INT, nullptr);
 
 
+        // Start a new frame
         ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+        ImGui::SetNextWindowPos({ 0.0f, 0.0f }, ImGuiCond_Always);
+        ImGui::SetNextWindowSize({(float)window.Width(), (float)window.Height()});
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
+        flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
+        | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
+        | ImGuiWindowFlags_NoBringToFrontOnFocus
+        | ImGuiWindowFlags_NoNavFocus;
         
-        ImGui::EndFrame();
+        ImGui::Begin("Dockspace", nullptr, flags);
+        ImGui::DockSpace(ImGui::GetID("Dockspace"));
+        ImGui::PopStyleVar(3);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+        if(ImGui::BeginMainMenuBar())
+        {
+            if(ImGui::BeginMenu("File"))
+            {
+                if(ImGui::MenuItem("New")) {}
+                if(ImGui::MenuItem("Open")) {}
+                if(ImGui::MenuItem("Save")) {}
+                if(ImGui::MenuItem("Save as...")) {}
+                ImGui::Separator();
+                if(ImGui::MenuItem("Quit")) {}
+                ImGui::EndMenu();
+            }
+
+            if(ImGui::BeginMenu("Edit"))
+            {
+                if(ImGui::MenuItem("Undo")) {}
+                if(ImGui::MenuItem("Redo")) {}
+                if(ImGui::MenuItem("Preferences")) {}
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+            ImGui::PopStyleVar(1);
+        }
+        ImGui::End();
+
+        ImGui::Begin("Window");
+        ImGui::Text("Test Windoow");
+        ImGui::End();
+
+        ImGui::Begin("Window2");
+        ImGui::Text("Test Windoow");
+        ImGui::End();
+        
+        // Render the frame
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        
         window.SwapBuffers();
         glfwPollEvents();
     }
-    
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     window.Destroy();
     glfwTerminate();
     return 0;
 }
-#else
-int main(const int argc, const char** argv)
-{
-    solar::Log::Init();
-    std::vector<solar::ObjMesh> ObjMeshes;
-    solar::LoadObj("Assets/Meshes/sonic.obj",ObjMeshes);
-    
-    
-    // Initialize GLFW
-    SOLAR_ASSERT(glfwInit(), "[GLFW] Failed to initialize GLFW.");
-    glfwSetErrorCallback([](std::int32_t code, const char* message)
-    {
-        SOLAR_LOG_ERROR("[GLFW] Error {}: {}\n", code, message);
-        SOLAR_ASSERT(false, message);
-    });
-    SOLAR_LOG_INFO("[GLFW] GLFW init successful!");
-
-    // Creating a window
-    solar::Window window("Solar Renderer", 1600, 900);
-    SOLAR_ASSERT(window.Create(), "[GLFW] Failed to create window.");
-    window.Bind();
-
-    // Loading OpenGl extensions
-    SOLAR_ASSERT(gladLoadGL(glfwGetProcAddress), "[OPENGL] Failed to initialize OpenGL context!");
-    SOLAR_LOG_INFO("[OpenGL] OpenGL extensions loading successful!");
-
-    glEnable(GL_MULTISAMPLE);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_FRAMEBUFFER_SRGB);
-
-#if defined(SOLAR_DEBUG)
-    glEnable(GL_DEBUG_OUTPUT);
-
-    auto messageCallback = [](GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam)
-    {
-        SOLAR_LOG_ERROR("[OpenGL] Error: {}\n" , message);
-    };
-    glDebugMessageCallback(messageCallback, nullptr);
-#endif
-
-    solar::Random::Seed();
-
-    const std::vector<solar::Vertex> vertices
-    {
-        {{-0.5, -0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},{1.0f, 0.0f, 0.0f, 1.0f}},
-        {{ 0.0f, 0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},{0.0f, 1.0f, 0.0f, 1.0f}},
-        {{ 0.5f,-0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
-    };
-
-    const std::vector<std::uint32_t> indices { 0, 2, 1 };
-    
-    const solar::VertexArray vao;
-    vao.Bind();
-    
-    const solar::VertexBuffer vbo(vertices);
-    vao.SetVertexAttributes();
-    
-    const solar::IndexBuffer ibo(indices);
-    solar::Shader shader(R"(Shaders\Test\Test.vert)", R"(Shaders\Test\Test.frag)");
-    shader.Compile();
-    shader.Link();
-
-    {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        io.DisplaySize = { (float)window.Width(), (float)window.Height() };
-        ImGui_ImplGlfw_InitForOpenGL(*window, true);
-        ImGui_ImplOpenGL3_Init("#version 460 core");
-        ImGuiStyleDark();
-    }
-    
-    while(!window.ShouldClose())
-    {
-        glClearColor(0.0, 0.0f, 0.0, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        shader.UseProgram();
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui::NewFrame();
-        
-        ImGui::EndFrame();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        window.SwapBuffers();
-        glfwPollEvents();
-    }
-    
-    window.Destroy();
-    glfwTerminate();
-    return 0;
-}
-#endif

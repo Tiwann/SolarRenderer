@@ -22,6 +22,7 @@ typedef std::uint32_t       Handle;
     #if defined(_WIN64)
         #define SOLAR_WINDOWS
         #include <Windows.h>
+#define SOLAR_MAIN (CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow))
     #endif
 #else
     #error "Couldn't compile on x86!"
@@ -30,6 +31,7 @@ typedef std::uint32_t       Handle;
 #if defined(__linux__)
 #define SOLAR_LINUX
 #include <unistd.h>
+#define SOLAR_MAIN (main(const int argc, const char** argv, const char** envp))
 #elif defined(__APPLE__)
 #error "Couldn't compile on MacOS!
 #endif
