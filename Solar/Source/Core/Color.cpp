@@ -2,22 +2,24 @@
 #include <climits>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 solar::Color::Color(std::uint32_t packed)
 {
-    r = (float)((packed >> 24) & 0xFF) / UCHAR_MAX;
-    g = (float)((packed >> 16) & 0xFF) / UCHAR_MAX;
-    b = (float)((packed >> 8) & 0xFF) / UCHAR_MAX;
-    a = (float)(packed & 0xFF) / UCHAR_MAX;
+    r = std::clamp<float>((float)((packed >> 24) & 0xFF) / UCHAR_MAX, 0.0f, 1.0f);
+    g = std::clamp<float>((float)((packed >> 16) & 0xFF) / UCHAR_MAX, 0.0f, 1.0f);
+    b = std::clamp<float>((float)((packed >> 8) & 0xFF) / UCHAR_MAX, 0.0f, 1.0f);
+    a = std::clamp<float>((float)(packed & 0xFF) / UCHAR_MAX, 0.0f, 1.0f);
 }
 
 solar::Color::Color(float red, float green, float blue, float alpha)
 {
-    r = red;
-    g = green;
-    b = blue;
-    a = alpha;
+    r = std::clamp<float>(red, 0.0f, 1.0f);
+    g = std::clamp<float>(green, 0.0f, 1.0f);
+    b = std::clamp<float>(blue, 0.0f, 1.0f);
+    a = std::clamp<float>(alpha, 0.0f, 1.0f);
 }
+
 
 solar::Color::Color(float hue, float value, float saturation)
 {
@@ -35,8 +37,28 @@ solar::Color::operator glm::vec4() const
     return { r, g, b, a };
 }
 
-solar::Color solar::Color::Black    = 0xFFFFFFFF;
-solar::Color solar::Color::White    = 0x000000FF;
+solar::Color& solar::Color::operator=(const Color& color)
+{
+    if(&color == this) return *this;
+    
+    r = color.r;
+    g = color.g;
+    b = color.b;
+    a = color.a;
+    return *this;
+}
+
+solar::Color& solar::Color::operator=(uint32_t packed)
+{
+    r = std::clamp<float>((float)((packed >> 24) & 0xFF) / UCHAR_MAX, 0.0f, 1.0f);
+    g = std::clamp<float>((float)((packed >> 16) & 0xFF) / UCHAR_MAX, 0.0f, 1.0f);
+    b = std::clamp<float>((float)((packed >> 8) & 0xFF) / UCHAR_MAX, 0.0f, 1.0f);
+    a = std::clamp<float>((float)(packed & 0xFF) / UCHAR_MAX, 0.0f, 1.0f);
+    return *this;
+}
+
+solar::Color solar::Color::White    = 0xFFFFFFFF;
+solar::Color solar::Color::Black    = 0x000000FF;
 solar::Color solar::Color::Red      = 0xFF0000FF;
 solar::Color solar::Color::Green    = 0x00FF00FF;
 solar::Color solar::Color::Blue     = 0x0000FFFF;

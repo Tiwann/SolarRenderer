@@ -10,6 +10,10 @@
 #include <spdlog/spdlog.h>
 #include <filesystem>
 
+#include "OpenGL/RenderCommand.h"
+#include "OpenGL/Texture2D.h"
+
+
 int SOLAR_MAIN
 {
     solar::Log::Init();
@@ -38,7 +42,7 @@ int SOLAR_MAIN
 
 #if defined(SOLAR_DEBUG)
     glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message,const void* userParam)
+    glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, int32_t length, const GLchar* message,const void* userParam)
     {
         SOLAR_LOG_ERROR("[OpenGL] Error: {}\n" , message);
     }, nullptr);
@@ -48,9 +52,9 @@ int SOLAR_MAIN
     
     const std::vector<solar::Vertex> vertices
     {
-        {{-0.5, -0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Pink   },
-        {{ 0.0f, 0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Brown },
-        {{ 0.5f,-0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Cyan  },
+        {{-0.5, -0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Red   },
+        {{ 0.0f, 0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Green },
+        {{ 0.5f,-0.5f, 0.0f },{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, solar::Color::Blue  },
     };
 
     const std::vector<std::uint32_t> indices { 0, 2, 1 };
@@ -68,102 +72,76 @@ int SOLAR_MAIN
     shader.Compile();
     shader.Link();
 
-    //GLuint fbo;
-    //glCreateFramebuffers(1, &fbo);
-    //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    solar::Texture2D texture0;
+    texture0.Bind();
+    
 
-    //// Create the texture
-    //GLuint texture;
-    //glGenTextures(1, &texture);
-    //glBindTexture(GL_TEXTURE_2D, texture);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    GLuint fbo;
+    glCreateFramebuffers(1, &fbo);
 
-    //// Attach the texture to the FBO
-    //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    // Create the texture
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    // Attach the texture to the FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // Initialize the ImGui context
+    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    // Set up the ImGui style
+    ImGuiIO& io = ImGui::GetIO(); (void)(io);
+    io.ConfigFlags = ImGuiConfigFlags_DockingEnable;
     ImGui::StyleColorsDark();
-    // Initialize the ImGui IO structure
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    // Set up the ImGui platform and renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(*window, true);
-    ImGui_ImplOpenGL3_Init("#version 330 core");
+    ImGui_ImplOpenGL3_Init("#version 450 core");
+    
     
     while(!window.ShouldClose())
     {
-        glClearColor(0.0, 0.0f, 0.0, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        vao.Bind();
-        shader.UseProgram();
-        glDrawElements(GL_TRIANGLES, (GLsizei)ibo.Count(), GL_UNSIGNED_INT, nullptr);
+        solar::RenderCommand::Clear(solar::Color::Black);
 
 
-        // Start a new frame
+        glm::uint32 bitfield0 = solar::BufferTypeColor | solar::BufferTypeDepth;
+        glm::uint32 bitfield1 = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+        GLbitfield bitfield2 = solar::BufferTypeColor | solar::BufferTypeDepth;
+        GLbitfield bitfield3 = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+        
+        solar::RenderCommand::Clear(solar::BufferTypeDepth | solar::BufferTypeColor);
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-        ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-        ImGui::SetNextWindowPos({ 0.0f, 0.0f }, ImGuiCond_Always);
-        ImGui::SetNextWindowSize({(float)window.Width(), (float)window.Height()});
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
-        flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
-        | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
-        | ImGuiWindowFlags_NoBringToFrontOnFocus
-        | ImGuiWindowFlags_NoNavFocus;
-        
-        ImGui::Begin("Dockspace", nullptr, flags);
-        ImGui::DockSpace(ImGui::GetID("Dockspace"));
-        ImGui::PopStyleVar(3);
-
-        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
-        if(ImGui::BeginMainMenuBar())
-        {
-            if(ImGui::BeginMenu("File"))
-            {
-                if(ImGui::MenuItem("New")) {}
-                if(ImGui::MenuItem("Open")) {}
-                if(ImGui::MenuItem("Save")) {}
-                if(ImGui::MenuItem("Save as...")) {}
-                ImGui::Separator();
-                if(ImGui::MenuItem("Quit")) {}
-                ImGui::EndMenu();
-            }
-
-            if(ImGui::BeginMenu("Edit"))
-            {
-                if(ImGui::MenuItem("Undo")) {}
-                if(ImGui::MenuItem("Redo")) {}
-                if(ImGui::MenuItem("Preferences")) {}
-                ImGui::EndMenu();
-            }
-            ImGui::EndMainMenuBar();
-            ImGui::PopStyleVar(1);
-        }
-        ImGui::End();
-
         ImGui::Begin("Window");
-        ImGui::Text("Test Windoow");
+        ImGui::PopStyleVar(1);
+        
+        // Update texture
+        glBindTexture(GL_TEXTURE_2D, texture);
+        const ImVec2 windowSize = ImGui::GetWindowSize();
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (int32_t)windowSize.x, (int32_t)windowSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE,  nullptr);
+
+        // Draw to framebuffer
+        glViewport(0, 0, (int32_t)windowSize.x, (int32_t)windowSize.y);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        vao.Bind();
+        shader.UseProgram();
+        glDrawElements(GL_TRIANGLES, (int32_t)ibo.Count(), GL_UNSIGNED_INT, nullptr);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        
+        ImGui::Image((ImTextureID)texture, windowSize, { 1.0f, 1.0f}, {0.0f, 0.0f});
         ImGui::End();
 
-        ImGui::Begin("Window2");
-        ImGui::Text("Test Windoow");
-        ImGui::End();
-        
-        // Render the frame
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        
         
         window.SwapBuffers();
         glfwPollEvents();
@@ -172,6 +150,7 @@ int SOLAR_MAIN
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+    
     window.Destroy();
     glfwTerminate();
     return 0;

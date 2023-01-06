@@ -16,9 +16,14 @@ public:
     Color(std::uint32_t packed);
     Color(float red, float green, float blue, float alpha);
     Color(float hue, float value, float saturation);
+
+
     
+    // Operators
     operator std::uint32_t() const;
     operator glm::vec4() const;
+    Color& operator=(const Color& color);
+    Color& operator=(uint32_t packed);
 
     static Color Black;
     static Color White;
