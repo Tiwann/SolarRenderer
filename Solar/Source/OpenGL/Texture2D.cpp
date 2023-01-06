@@ -2,11 +2,15 @@
 #include <glad/gl.h>
 
 
-solar::Texture2D::Texture2D(const TextureParams& params)
+solar::Texture2D::Texture2D(const TextureParams& params) : mParams(params)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &mHandle);
-    mParams = params;
     (void)mData;
+}
+
+solar::Texture2D::~Texture2D()
+{
+    glDeleteTextures(1, &mHandle);
 }
 
 void solar::Texture2D::Bind() const

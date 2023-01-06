@@ -19,12 +19,7 @@ struct TextureParams
     int32_t width;
     int32_t height;
     TextureFormat format;
-
-    static TextureParams Default;
 };
-
-TextureParams TextureParams::Default = { 0, 0, RGB };
-
 
 class Texture2D
 {
@@ -33,7 +28,8 @@ private:
     TextureParams mParams;
     std::vector<uint8_t> mData;
 public:
-    Texture2D(const TextureParams& params = TextureParams::Default);
+    Texture2D(const TextureParams& params);
+    ~Texture2D();
     void Bind() const;
     void Unbind() const;
     void SetData(const std::vector<uint8_t>& pixels);
@@ -41,5 +37,6 @@ public:
     void SetParams(const TextureParams& params);
 
     const Handle& operator*() const { return mHandle; }
+    NODISCARD const Handle& Handle() const { return mHandle; }
 };
 SOLAR_END

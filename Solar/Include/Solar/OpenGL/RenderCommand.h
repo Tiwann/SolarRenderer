@@ -7,8 +7,8 @@
 SOLAR_BEGIN
 enum : uint32_t
 {
-    BufferTypeColor = GL_COLOR_BUFFER_BIT,
-    BufferTypeDepth = GL_DEPTH_BUFFER_BIT
+    ColorBuffer = GL_COLOR_BUFFER_BIT,
+    DepthBuffer = GL_DEPTH_BUFFER_BIT
 };
 
 class RenderCommand
